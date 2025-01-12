@@ -28,7 +28,7 @@
    DB_PASSWORD=root
    ```
 
-5. **Rodar esses comandos no terminal do diretório do projeto:**
+5. **Rodar esses comandos no terminal do diretório do projeto para subir a aplicação e o banco de dados:**
 
    ```bash
     docker-compose up -d
