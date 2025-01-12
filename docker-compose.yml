@@ -1,0 +1,40 @@
+services:
+  tray_commission_system_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tray_commission_system_app_container
+    ports:
+      - "3337:3337"
+    volumes:
+      - .:/var/www/html
+      - ./apache-config.conf:/etc/apache2/sites-available/000-default.conf
+    depends_on:
+      - tray_commission_system_mysql
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+    networks:
+      - tray_network
+
+  tray_commission_system_mysql:
+    image: mysql:8.0
+    container_name: tray_commission_system_mysql_container
+    command: ['--default-authentication-plugin=mysql_native_password', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci']
+    restart: always
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    ports:
+      - ${DB_PORT_EXTERNAL}:${DB_PORT_INTERNAL}
+    expose:
+      - ${DB_PORT_EXTERNAL}:${DB_PORT_INTERNAL}
+    networks:
+      - tray_network
+
+networks:
+  tray_network:
+    driver: bridge
+
+volumes:
+  tray_network:
